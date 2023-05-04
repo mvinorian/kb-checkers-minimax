@@ -11,12 +11,12 @@ class Button():
 	def update(self, screen):
 		screen.blit(self.text, self.text_rect)
 
-	def checkForInput(self, position):
+	def checkMouseInput(self, position):
 		if position[0] in range(self.text_rect.left, self.text_rect.right) and position[1] in range(self.text_rect.top, self.text_rect.bottom):
 			return True
 		return False
 
-	def changeColor(self, position):
+	def hoverColor(self, position):
 		if position[0] in range(self.text_rect.left, self.text_rect.right) and position[1] in range(self.text_rect.top, self.text_rect.bottom):
 			self.text = self.font.render(self.text_show, True, self.hovering_color)
 		else:
