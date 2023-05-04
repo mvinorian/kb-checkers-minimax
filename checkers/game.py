@@ -47,3 +47,6 @@ class Game:
         for move in self.valid_moves:
             row, col = move
             pygame.draw.circle(self.window, HELPER, (col*SQUARE+SQUARE//2, row*SQUARE+SQUARE//2), self.HELPER_SIZE)
+
+    def winner(self):
+        return self.board.winner()

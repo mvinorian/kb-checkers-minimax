@@ -6,6 +6,7 @@ from .constants import ROWS, COLS, BG_DARK, BG_LIGHT, SQUARE, RED, WHITE
 class Board:
     def __init__(self):
         self.board = []
+        self.red_left = self.white_left = 4
         self.create_board()
 
     def create_board(self):
@@ -48,6 +49,11 @@ class Board:
     def remove(self, pieces: list):
         for piece in pieces:
             self.board[piece.row][piece.col] = 0
+            if piece != 0:
+                if piece.color == RED:
+                    self.red_left -= 1
+                else:
+                    self.white_left -= 1
 
     def get_valid_moves(self, piece: Piece):
         moves = {}
@@ -158,3 +164,11 @@ class Board:
                 moves.update(self._traverse_down(new_position, color, king, eaten=eaten+[right]))
 
         return moves
+
+    def winner(self):
+        if self.red_left <= 0:
+            return "WHITE"
+        elif self.white_left <= 0:
+            return "RED"
+        
+        return None 
