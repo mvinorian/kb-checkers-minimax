@@ -50,3 +50,7 @@ class Game:
 
     def winner(self):
         return self.board.winner()
+
+    def agent_move(self, board: Board):
+        self.board = board
+        self.change_turn()

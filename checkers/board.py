@@ -7,6 +7,7 @@ class Board:
     def __init__(self):
         self.board = []
         self.red_left = self.white_left = 4
+        self.red_kings = self.white_kings = 0
         self.create_board()
 
     def create_board(self):
@@ -34,9 +35,29 @@ class Board:
                 if piece != 0:
                     piece.draw(window)
 
+    def evaluate(self):
+        return self.white_left - self.red_left + 0.5 * (self.white_kings - self.red_kings)
+    
+    def winner(self):
+        if self.red_left <= 0:
+            return "WHITE"
+        elif self.white_left <= 0:
+            return "RED"
+        
+        return None 
+
     def get_piece(self, position: tuple) -> Piece or int:
         row, col = position
         return self.board[row][col]
+
+    def get_all_pieces(self, color: tuple) -> list:
+        pieces = []
+        for row in self.board:
+            for piece in row:
+                if piece != 0 and piece.color == color:
+                    pieces.append(piece)
+
+        return pieces
 
     def move(self, piece: Piece, position: tuple):
         row, col = position
@@ -45,6 +66,10 @@ class Board:
 
         if row == 0 or row == ROWS -1:
             piece.promote()
+            if piece.color == RED:
+                self.red_kings += 1
+            if piece.color == WHITE:
+                self.white_kings += 1
 
     def remove(self, pieces: list):
         for piece in pieces:
@@ -52,10 +77,10 @@ class Board:
             if piece != 0:
                 if piece.color == RED:
                     self.red_left -= 1
-                else:
+                if piece.color == WHITE:
                     self.white_left -= 1
 
-    def get_valid_moves(self, piece: Piece):
+    def get_valid_moves(self, piece: Piece) -> dict:
         moves = {}
         if piece.color == RED or piece.king:
             moves.update(self._traverse_up((piece.row, piece.col), piece.color, piece.king))
@@ -164,11 +189,3 @@ class Board:
                 moves.update(self._traverse_down(new_position, color, king, eaten=eaten+[right]))
 
         return moves
-
-    def winner(self):
-        if self.red_left <= 0:
-            return "WHITE"
-        elif self.white_left <= 0:
-            return "RED"
-        
-        return None 

@@ -1,6 +1,7 @@
 import pygame, sys
 from checkers.game import Game
-from checkers.constants import WIDTH, HEIGHT, SQUARE
+from checkers.constants import WIDTH, HEIGHT, SQUARE, WHITE
+from checkers.minimax import minimax
 from button import Button
 
 pygame.init()
@@ -15,10 +16,10 @@ def get_row_col(position):
     col = x//SQUARE
     return row, col
 
-def get_font(size):
+def get_font(size: int):
     return pygame.font.Font("assets/bloomberg.otf", size)
 
-def win_state(winner):
+def win_state(winner: str):
     while True:
         WINDOW.fill("Black")
         state_mouse_pos = pygame.mouse.get_pos()
@@ -51,6 +52,10 @@ def play():
             print(game.winner() + ' WIN!')
             running = False
             win_state(game.winner())
+
+        if game.turn == WHITE:
+            _, best_board = minimax(game.board, 5, True, game)
+            game.agent_move(best_board)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
