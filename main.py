@@ -28,12 +28,12 @@ def win_state(winner):
         WINDOW.blit(state_text, state_box)
 
         back_button = Button(x_pos=200, y_pos=400, text_show="Back To Menu", font=get_font(65), base_color="white", hovering_color="#FF0000")
-        back_button.changeColor(state_mouse_pos)
+        back_button.hoverColor(state_mouse_pos)
         back_button.update(WINDOW)
 
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if back_button.checkForInput(state_mouse_pos):
+                if back_button.checkMouseInput(state_mouse_pos):
                     main()
 
         pygame.display.update()
@@ -76,7 +76,7 @@ def main():
         quit_button = Button(x_pos=200, y_pos=500, text_show="Quit", font=get_font(65), base_color="black", hovering_color="#FF0000")
 
         for button in [play_button, quit_button]:
-            button.changeColor(main_mouse_pos)
+            button.hoverColor(main_mouse_pos)
             button.update(WINDOW)
 
         for event in pygame.event.get():
@@ -84,9 +84,9 @@ def main():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if play_button.checkForInput(main_mouse_pos):
+                if play_button.checkMouseInput(main_mouse_pos):
                     play()
-                if quit_button.checkForInput(main_mouse_pos):
+                if quit_button.checkMouseInput(main_mouse_pos):
                     pygame.quit()
                     sys.exit()
 
