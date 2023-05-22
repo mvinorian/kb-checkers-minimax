@@ -5,7 +5,7 @@ from .constants import RED, WHITE
 from copy import deepcopy
 
 
-def minimax(board: Board, depth: int, is_max: bool, game: Game) -> list:
+def minimax(board: Board, depth: int, game: Game, is_max: bool = True) -> list:
     if depth == 0 or board.winner() != None:
         return [board.evaluate(), board]
 
@@ -14,7 +14,7 @@ def minimax(board: Board, depth: int, is_max: bool, game: Game) -> list:
         best_move = None
 
         for move in get_all_moves(board, WHITE, game):
-            evaluation = minimax(move, depth-1, False, game)[0]
+            evaluation = minimax(move, depth-1, game, is_max=False)[0]
             max_eval = max(evaluation, max_eval)
             if evaluation == max_eval:
                 best_move = move
@@ -25,8 +25,43 @@ def minimax(board: Board, depth: int, is_max: bool, game: Game) -> list:
     best_move = None
     
     for move in get_all_moves(board, RED, game):
-        evaluation = minimax(move, depth-1, True, game)[0]
+        evaluation = minimax(move, depth-1, game, is_max=True)[0]
         min_eval = min(evaluation, min_eval)
+        if evaluation == min_eval:
+            best_move = move
+
+    return [min_eval, best_move]
+
+def alphabeta(board: Board, depth: int, game: Game, is_max: bool = True, alpha: float = float('-inf'), beta: float = float('inf')) -> list:
+    if depth == 0 or board.winner() != None:
+        return [board.evaluate(), board]
+
+    if is_max:
+        max_eval = float('-inf')
+        best_move = None
+
+        for move in get_all_moves(board, WHITE, game):
+            evaluation = alphabeta(move, depth-1, game, is_max=False, alpha=alpha, beta=beta)[0]
+            max_eval = max(evaluation, max_eval)
+            if max_eval > beta:
+                break
+            
+            alpha = max(alpha, max_eval)
+            if evaluation == max_eval:
+                best_move = move
+            
+        return [max_eval, best_move]
+
+    min_eval = float('inf')
+    best_move = None
+    
+    for move in get_all_moves(board, RED, game):
+        evaluation = alphabeta(move, depth-1, game, is_max=True, alpha=alpha, beta=beta)[0]
+        min_eval = min(evaluation, min_eval)
+        if min_eval < alpha:
+            break
+        
+        beta = max(beta, min_eval)
         if evaluation == min_eval:
             best_move = move
 
@@ -52,4 +87,3 @@ def get_all_moves(board: Board, color: tuple, game: Game):
             moves.append(new_board)
 
     return moves
-            

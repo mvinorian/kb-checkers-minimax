@@ -1,14 +1,14 @@
-import pygame, sys
+import pygame, sys, time
 from checkers.game import Game
 from checkers.constants import WIDTH, HEIGHT, SQUARE, WHITE
-from checkers.minimax import minimax
-from button import Button
+from checkers.algorithm import minimax
+from ui.button import Button
 
 pygame.init()
 FPS = 60
 
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('Checkers Game')
+pygame.display.set_caption('Checkers | Minimax')
 
 def get_row_col(position):
     x, y = position
@@ -62,8 +62,11 @@ def play():
             win_state(game.tie())
 
         if game.turn == WHITE:
-            _, best_board = minimax(game.board, 5, True, game)
+            start = time.time()
+            _, best_board = minimax(game.board, 5, game)
+            end = time.time()
             game.agent_move(best_board)
+            print(f"time: {end-start}")
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
