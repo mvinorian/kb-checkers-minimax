@@ -23,7 +23,10 @@ def win_state(winner: str):
     while True:
         WINDOW.fill("Black")
         state_mouse_pos = pygame.mouse.get_pos()
-        state_text = get_font(100).render(winner +" Win", True, winner)
+        if winner == "GAME TIE":
+            state_text = get_font(100).render(winner, True, "white")
+        else:    
+            state_text = get_font(100).render(winner +" Win", True, winner)
         state_box = state_text.get_rect(center=(200, 100))
 
         WINDOW.blit(state_text, state_box)
@@ -52,6 +55,11 @@ def play():
             print(game.winner() + ' WIN!')
             running = False
             win_state(game.winner())
+
+        if game.tie() != None:
+            print('GAME TIE!')
+            running = False
+            win_state(game.tie())
 
         if game.turn == WHITE:
             _, best_board = minimax(game.board, 5, True, game)

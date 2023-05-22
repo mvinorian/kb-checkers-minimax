@@ -44,7 +44,13 @@ class Board:
         elif self.white_left <= 0:
             return "RED"
         
-        return None 
+        return None
+    
+    def tie(self, is_tie: bool):
+        if is_tie:
+            return 'GAME TIE'
+        else:
+            return None
 
     def get_piece(self, position: tuple) -> Piece or int:
         row, col = position

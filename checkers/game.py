@@ -2,6 +2,7 @@ import pygame
 from .board import Board
 from .constants import RED, WHITE, HELPER, SQUARE
 
+arr = []
 
 class Game:
     HELPER_SIZE = 15
@@ -12,6 +13,7 @@ class Game:
         self.window = window
         self.turn = RED
         self.valid_moves = {}
+        self.is_tie = False
 
     def update(self):
         self.board.draw(self.window)
@@ -26,6 +28,14 @@ class Game:
                 if eaten:
                     self.board.remove(eaten)
                 self.change_turn()
+                arr.append(position)
+                if len(arr) > 2:
+                    if arr[len(arr) - 3] != arr[len(arr) - 1]:
+                        arr.clear()
+                        arr.append(position)
+                        
+                if len(arr) == 5:
+                    self.is_tie = True
             else:
                 self.selected = None
                 self.valid_moves = {}
@@ -50,6 +60,9 @@ class Game:
 
     def winner(self):
         return self.board.winner()
+
+    def tie(self):
+        return self.board.tie(self.is_tie)
 
     def agent_move(self, board: Board):
         self.board = board
