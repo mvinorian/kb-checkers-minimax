@@ -61,7 +61,7 @@ def alphabeta(board: Board, depth: int, game: Game, is_max: bool = True, alpha: 
         if min_eval < alpha:
             break
         
-        beta = max(beta, min_eval)
+        beta = min(beta, min_eval)
         if evaluation == min_eval:
             best_move = move
 
