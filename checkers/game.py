@@ -7,6 +7,7 @@ arr = []
 class Game:
     HELPER_SIZE = 15
 
+    # Inisialisasi game
     def __init__(self, window: pygame.Surface):
         self.selected = None
         self.board = Board()
@@ -15,11 +16,13 @@ class Game:
         self.valid_moves = {}
         self.is_tie = False
 
+    # Pembaharuan tampilan game
     def update(self):
         self.board.draw(self.window)
         self.draw_valid_moves()
         pygame.display.update()
 
+    # Pemilihan bidak yang akan dijalankan
     def select(self, position: tuple):
         if self.selected:
             if position in self.valid_moves:
@@ -49,21 +52,26 @@ class Game:
 
         return False
 
+    # Mengganti giliran
     def change_turn(self):
         self.valid_moves = {}
         self.turn = WHITE if self.turn == RED else RED
 
+    # Menggambarkan gerak yang memungkinkan untuk bidak yang sebelumnya di pilih (select)
     def draw_valid_moves(self):
         for move in self.valid_moves:
             row, col = move
             pygame.draw.circle(self.window, HELPER, (col*SQUARE+SQUARE//2, row*SQUARE+SQUARE//2), self.HELPER_SIZE)
 
+    # Mengembalikan siapa pemenang game
     def winner(self):
         return self.board.winner()
 
+    # Mengembalikan nilai seri
     def tie(self):
         return self.board.tie(self.is_tie)
 
+    # Fungsi untuk melakukan transisi menuju giliran oposisi dari agent
     def agent_move(self, board: Board):
         self.board = board
         self.change_turn()

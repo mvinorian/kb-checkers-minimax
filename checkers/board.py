@@ -2,14 +2,16 @@ import pygame
 from .piece import Piece
 from .constants import ROWS, COLS, BG_DARK, BG_LIGHT, SQUARE, RED, WHITE
 
-
+# Papan permainan Dam (Checkers)
 class Board:
+    # Inisialisasi papan dan kondisinya
     def __init__(self):
         self.board = []
         self.red_left = self.white_left = 4
         self.red_kings = self.white_kings = 0
         self.create_board()
 
+    # Membuat papan
     def create_board(self):
         for row in range(ROWS):
             self.board.append([])
@@ -21,12 +23,14 @@ class Board:
                 else:
                     self.board[row].append(0)
 
+    # Visualisasi bentuk papan
     def draw_squares(self, window: pygame.Surface):
         window.fill(BG_DARK)
         for row in range(ROWS):
             for col in range(row % 2, COLS, 2):
                 pygame.draw.rect(window, BG_LIGHT, (col*SQUARE, row*SQUARE, SQUARE, SQUARE))
 
+    # Visualisasi bidak 
     def draw(self, window):
         self.draw_squares(window)
         for row in range(ROWS):
@@ -35,9 +39,11 @@ class Board:
                 if piece != 0:
                     piece.draw(window)
 
+    # Penghitungan nilai dari papan berdasarkan bidak-bidak yang ada
     def evaluate(self):
         return self.white_left - self.red_left + 0.5 * (self.white_kings - self.red_kings)
     
+    # Memberikan pemenang game
     def winner(self):
         if self.red_left <= 0:
             return "WHITE"
@@ -46,16 +52,19 @@ class Board:
         
         return None
     
+    # Mendefinisikan seri
     def tie(self, is_tie: bool):
         if is_tie:
             return 'GAME TIE'
         else:
             return None
 
+    # Mendapatkan posisi bidak
     def get_piece(self, position: tuple) -> Piece or int:
         row, col = position
         return self.board[row][col]
 
+    # Mendapatkan seluruh posisi bidak
     def get_all_pieces(self, color: tuple) -> list:
         pieces = []
         for row in self.board:
@@ -65,6 +74,7 @@ class Board:
 
         return pieces
 
+    # Melakukan pembaruan posisi serta karakteristik dari bidak
     def move(self, piece: Piece, position: tuple):
         row, col = position
         self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
@@ -77,6 +87,7 @@ class Board:
             if piece.color == WHITE:
                 self.white_kings += 1
 
+    # Menghapus bidak yang termakan
     def remove(self, pieces: list):
         for piece in pieces:
             self.board[piece.row][piece.col] = 0
@@ -86,6 +97,7 @@ class Board:
                 if piece.color == WHITE:
                     self.white_left -= 1
 
+    # Mendapatkan semua gerak yang memungkinkan
     def get_valid_moves(self, piece: Piece) -> dict:
         moves = {}
         if piece.color == RED or piece.king:
@@ -98,6 +110,7 @@ class Board:
 
         return moves
 
+    # Mendapatkan gerak atas
     def _traverse_up(self, position: tuple, color: tuple, king: bool, eaten: list = []):
         row, col = position
         moves = {}
@@ -121,6 +134,7 @@ class Board:
 
         return moves
 
+    # Mendapatkan gerak bawah
     def _traverse_down(self, position: tuple, color: tuple, king: bool, eaten: list = []):
         row, col = position
         moves = {}
@@ -144,6 +158,7 @@ class Board:
 
         return moves
 
+    # Mendapatkan gerak kiri
     def _traverse_left(self, position: tuple, color: tuple, king: bool, eaten: list = []):
         row, col = position
         moves = {}
@@ -170,6 +185,7 @@ class Board:
 
         return moves
 
+    # Mendapatkan gerak kanan
     def _traverse_right(self, position: tuple, color: tuple, king: bool, eaten: list = []):
         row, col = position
         moves = {}

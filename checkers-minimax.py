@@ -10,15 +10,18 @@ FPS = 60
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Checkers | Minimax')
 
+# Mengembalikan posisi
 def get_row_col(position):
     x, y = position
     row = y//SQUARE
     col = x//SQUARE
     return row, col
 
+# Mengembalikan jenis font yang dibutuhkan
 def get_font(size: int):
     return pygame.font.Font("assets/bloomberg.otf", size)
 
+# Menampilkan hasil akhir
 def win_state(winner: str):
     while True:
         WINDOW.fill("Black")
@@ -42,6 +45,7 @@ def win_state(winner: str):
 
         pygame.display.update()
 
+# Fungsi utama yang menjalankan dan menampilkan jalannya game 
 def play():
     running = True
     clock = pygame.time.Clock()
@@ -76,6 +80,7 @@ def play():
                 position = get_row_col(pygame.mouse.get_pos())
                 game.select(position)
 
+# Fungsi untuk menampilkan main menu
 def main():
     
     while True:
